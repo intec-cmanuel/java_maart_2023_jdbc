@@ -3,10 +3,7 @@ package be.intecbrussel.repository;
 import be.intecbrussel.config.MySQLConfig;
 import be.intecbrussel.model.Account;
 
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -74,14 +71,14 @@ public class AccountRepository {
     }
 
     public void deleteAccount(String username) {
-        String query = "DELETE FROM account WHERE username = '" + username + "'";
+        String query = "DELETE FROM account WHERE username = ?";
 
         try (Connection connection = MySQLConfig.getConnection()) {
 
-            Statement statement = connection.createStatement();
-            System.out.println(query);
+            PreparedStatement statement = connection.prepareStatement(query);
+            statement.setString(1, username);
 
-            statement.executeUpdate(query);
+            statement.executeUpdate();
 
         } catch (SQLException e) {
             e.printStackTrace();
